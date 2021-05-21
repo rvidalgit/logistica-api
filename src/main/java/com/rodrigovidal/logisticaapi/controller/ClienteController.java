@@ -7,6 +7,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
 import java.util.UUID;
 
@@ -39,7 +40,7 @@ public class ClienteController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
-    public Cliente criar(@RequestBody Cliente cliente) {
+    public Cliente criar(@Valid @RequestBody Cliente cliente) {
         return clienteRepository.save(cliente);
     }
 

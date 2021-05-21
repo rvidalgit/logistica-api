@@ -7,6 +7,10 @@ import lombok.Setter;
 import org.hibernate.annotations.GenericGenerator;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.Size;
 import java.util.UUID;
 
 @Entity
@@ -23,12 +27,19 @@ public class Cliente {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
+    @NotBlank(message = "O campo não pode ser vazio ou nulo")
+    @Size(max = 255)
     @Column(nullable = false)
     private String nome;
 
+    @NotBlank(message = "O campo não pode ser vazio ou nulo")
+    @Size(max = 255)
+    @Email(message = "E-mail inválido")
     @Column(nullable = false)
     private String email;
 
+    @NotBlank(message = "O campo não pode ser vazio ou nulo")
+    @Size(max = 255)
     @Column(nullable = false)
     private String telefone;
 

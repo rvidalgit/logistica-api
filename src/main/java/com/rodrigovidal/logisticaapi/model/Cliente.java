@@ -1,5 +1,6 @@
 package com.rodrigovidal.logisticaapi.model;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,9 +13,11 @@ import java.util.UUID;
 @Table(name = "cliente", uniqueConstraints = {@UniqueConstraint(columnNames = {"email"}, name = "email_key")})
 @Getter
 @Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
 @NoArgsConstructor
 public class Cliente {
 
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")

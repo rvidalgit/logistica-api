@@ -1,30 +1,69 @@
 package com.rodrigovidal.logisticaapi.controller;
 
 import com.rodrigovidal.logisticaapi.model.Cliente;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
+import com.rodrigovidal.logisticaapi.repository.ClienteRepository;
+import lombok.AllArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+@AllArgsConstructor
 @RestController
+@RequestMapping("/clientes")
 public class ClienteController {
 
-    @GetMapping("/clientes")
-    public List<Cliente> listar() {
-        var cliente1 = new Cliente();
-        cliente1.setId(UUID.fromString("66d09818-138c-4119-a4b2-f27a061a8ca9"));
-        cliente1.setNome("Rodrigo");
-        cliente1.setTelefone("21982823135");
-        cliente1.setEmail("rodrigo@gmail.com");
+    private final ClienteRepository clienteRepository;
 
-        var cliente2 = new Cliente();
-        cliente2.setId(UUID.fromString("b2443537-666d-4a9f-9414-4480c6e5a786"));
-        cliente2.setNome("Ananda");
-        cliente2.setTelefone("2199597940");
-        cliente2.setEmail("ananda@gmail.com");
-        return Arrays.asList(cliente1, cliente2);
+    @GetMapping
+    public List<Cliente> listar() {
+        return clienteRepository.findAll();
     }
 
+    @GetMapping("/{clienteId}")
+    public ResponseEntity<Cliente> buscar(@PathVariable UUID clienteId) {
+        return clienteRepository.findById(clienteId)
+                .map(ResponseEntity::ok) //method reference
+                .orElse(ResponseEntity.notFound().build());
+
+        /*Optional<Cliente> cliente = clienteRepository.findById(clienteId);
+
+        if (cliente.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(cliente.get());*/
+    }
+
+    @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public Cliente criar(@RequestBody Cliente cliente) {
+        return clienteRepository.save(cliente);
+    }
+
+    @PutMapping("/{clienteId}")
+    public ResponseEntity<Cliente> alterar(@RequestBody Cliente cliente,
+                                           @PathVariable UUID clienteId) {
+        if (!clienteRepository.existsById(clienteId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        cliente.setId(clienteId);
+
+        return ResponseEntity.ok(clienteRepository.save(cliente));
+    }
+
+    @DeleteMapping("/{clienteId}")
+    public ResponseEntity<Void> deleter(@PathVariable UUID clienteId) {
+
+        if (!clienteRepository.existsById(clienteId)) {
+            return ResponseEntity.notFound().build();
+        }
+
+        clienteRepository.deleteById(clienteId);
+
+        return ResponseEntity.noContent().build();
+    }
 }

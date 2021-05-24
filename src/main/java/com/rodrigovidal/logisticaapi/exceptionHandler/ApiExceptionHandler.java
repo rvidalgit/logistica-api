@@ -1,5 +1,8 @@
 package com.rodrigovidal.logisticaapi.exceptionHandler;
 
+import lombok.AllArgsConstructor;
+import org.springframework.context.MessageSource;
+import org.springframework.context.i18n.LocaleContextHolder;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,8 +17,11 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 @ControllerAdvice
 public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
+
+    private MessageSource messageSource;
 
     @Override
     protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -23,7 +29,11 @@ public class ApiExceptionHandler extends ResponseEntityExceptionHandler {
 
         for (ObjectError error : ex.getBindingResult().getAllErrors()) {
             String nome = ((FieldError) error).getField();
-            campos.add(new ValidationErrorResponse.Campo(nome, error.getDefaultMessage()));
+
+            String mensagem = messageSource.getMessage(error, LocaleContextHolder.getLocale());
+
+            //campos.add(new ValidationErrorResponse.Campo(nome, error.getDefaultMessage()));
+            campos.add(new ValidationErrorResponse.Campo(nome, mensagem));
         }
 
         ValidationErrorResponse response = new ValidationErrorResponse();

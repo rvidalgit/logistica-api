@@ -27,19 +27,19 @@ public class Cliente {
     @GenericGenerator(name = "UUID", strategy = "org.hibernate.id.UUIDGenerator")
     private UUID id;
 
-    @NotBlank(message = "O campo não pode ser vazio ou nulo")
-    @Size(max = 255)
+    @NotBlank
+    @Size(max = 255, min = 3)
     @Column(nullable = false)
     private String nome;
 
-    @NotBlank(message = "O campo não pode ser vazio ou nulo")
-    @Size(max = 255)
-    @Email(message = "E-mail inválido")
+    @NotBlank
+    @Size(max = 255, min = 10)
+    @Email
     @Column(nullable = false)
     private String email;
 
-    @NotBlank(message = "O campo não pode ser vazio ou nulo")
-    @Size(max = 255)
+    @NotBlank
+    @Size(max = 255, min = 10)
     @Column(nullable = false)
     private String telefone;
 

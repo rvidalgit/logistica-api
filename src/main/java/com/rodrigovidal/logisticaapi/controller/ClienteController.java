@@ -2,6 +2,7 @@ package com.rodrigovidal.logisticaapi.controller;
 
 import com.rodrigovidal.logisticaapi.model.Cliente;
 import com.rodrigovidal.logisticaapi.repository.ClienteRepository;
+import com.rodrigovidal.logisticaapi.services.ClienteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,6 +18,7 @@ import java.util.UUID;
 public class ClienteController {
 
     private final ClienteRepository clienteRepository;
+    private final ClienteService clienteService;
 
     @GetMapping
     public List<Cliente> listar() {
@@ -41,7 +43,7 @@ public class ClienteController {
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
     public Cliente criar(@Valid @RequestBody Cliente cliente) {
-        return clienteRepository.save(cliente);
+        return clienteService.salvar(cliente);
     }
 
     @PutMapping("/{clienteId}")
@@ -53,17 +55,17 @@ public class ClienteController {
 
         cliente.setId(clienteId);
 
-        return ResponseEntity.ok(clienteRepository.save(cliente));
+        return ResponseEntity.ok(clienteService.salvar(cliente));
     }
 
     @DeleteMapping("/{clienteId}")
-    public ResponseEntity<Void> deleter(@PathVariable UUID clienteId) {
+    public ResponseEntity<Void> deletar(@PathVariable UUID clienteId) {
 
         if (!clienteRepository.existsById(clienteId)) {
             return ResponseEntity.notFound().build();
         }
 
-        clienteRepository.deleteById(clienteId);
+        clienteService.excluir(clienteId);
 
         return ResponseEntity.noContent().build();
     }

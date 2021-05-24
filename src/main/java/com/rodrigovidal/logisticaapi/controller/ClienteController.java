@@ -1,7 +1,6 @@
 package com.rodrigovidal.logisticaapi.controller;
 
 import com.rodrigovidal.logisticaapi.model.Cliente;
-import com.rodrigovidal.logisticaapi.repository.ClienteRepository;
 import com.rodrigovidal.logisticaapi.services.ClienteService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -17,27 +16,16 @@ import java.util.UUID;
 @RequestMapping("/clientes")
 public class ClienteController {
 
-    private final ClienteRepository clienteRepository;
     private final ClienteService clienteService;
 
     @GetMapping
     public List<Cliente> listar() {
-        return clienteRepository.findAll();
+        return clienteService.listar();
     }
 
     @GetMapping("/{clienteId}")
     public ResponseEntity<Cliente> buscar(@PathVariable UUID clienteId) {
-        return clienteRepository.findById(clienteId)
-                .map(ResponseEntity::ok) //method reference
-                .orElse(ResponseEntity.notFound().build());
-
-        /*Optional<Cliente> cliente = clienteRepository.findById(clienteId);
-
-        if (cliente.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(cliente.get());*/
+        return clienteService.buscar(clienteId);
     }
 
     @PostMapping
@@ -49,24 +37,11 @@ public class ClienteController {
     @PutMapping("/{clienteId}")
     public ResponseEntity<Cliente> alterar(@RequestBody Cliente cliente,
                                            @PathVariable UUID clienteId) {
-        if (!clienteRepository.existsById(clienteId)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        cliente.setId(clienteId);
-
-        return ResponseEntity.ok(clienteService.salvar(cliente));
+        return clienteService.editar(cliente, clienteId);
     }
 
     @DeleteMapping("/{clienteId}")
     public ResponseEntity<Void> deletar(@PathVariable UUID clienteId) {
-
-        if (!clienteRepository.existsById(clienteId)) {
-            return ResponseEntity.notFound().build();
-        }
-
-        clienteService.excluir(clienteId);
-
-        return ResponseEntity.noContent().build();
+        return clienteService.excluir(clienteId);
     }
 }

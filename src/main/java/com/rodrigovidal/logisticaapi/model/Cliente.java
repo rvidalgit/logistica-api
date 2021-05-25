@@ -1,5 +1,6 @@
 package com.rodrigovidal.logisticaapi.model;
 
+import com.rodrigovidal.logisticaapi.model.Validation.ValidationGroups;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -9,6 +10,7 @@ import org.hibernate.annotations.GenericGenerator;
 import javax.persistence.*;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.util.UUID;
 
@@ -20,6 +22,7 @@ import java.util.UUID;
 @NoArgsConstructor
 public class Cliente {
 
+    @NotNull(groups = ValidationGroups.ClientId.class)
     @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(generator = "UUID")

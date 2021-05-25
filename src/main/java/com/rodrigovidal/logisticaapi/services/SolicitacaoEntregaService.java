@@ -16,12 +16,11 @@ import java.time.LocalDateTime;
 @Service
 public class SolicitacaoEntregaService {
 
-    private EntregaRepository entregaRepository;
-    private ClienteRepository clienteRepository;
+    private final EntregaRepository entregaRepository;
+    private final ClienteRepository clienteRepository;
 
     @Transactional
     public Entrega solicitar(Entrega entrega) {
-
         carregaCliente(entrega);
         entrega.setDataPedido(LocalDateTime.now());
         entrega.setStatus(StatusEntrega.PENDENTE);
